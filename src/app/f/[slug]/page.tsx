@@ -5,8 +5,7 @@ import { FunnelThemeProvider } from '@/components/renderer/funnel-theme-provider
 import { FunnelRenderer } from '@/components/renderer/funnel-renderer'
 import Script from 'next/script'
 
-// Disable caching for preview/dev if needed, but in Vercel we use the vercel.json Cache-Control
-export const revalidate = 60 // ISR: revalidate every 60 seconds
+export const dynamic = 'force-dynamic'
 
 export default async function PublicFunnelPage({
   params,
