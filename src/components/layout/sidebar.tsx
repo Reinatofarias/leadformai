@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   LogOut,
+  UserPlus,
 } from 'lucide-react'
 import { logoutAction } from '@/actions/auth'
 
@@ -20,6 +21,7 @@ const navigation = [
   { name: 'Funis', href: '/dashboard/funnels', icon: Zap },
   { name: 'Leads', href: '/dashboard/leads', icon: Users },
   { name: 'Templates', href: '/dashboard/templates', icon: LayoutTemplate },
+  { name: 'Membros', href: '/dashboard/settings/members', icon: UserPlus },
 ]
 
 interface SidebarProps {

@@ -59,3 +59,22 @@ export function StatusBadge({ status }: { status: string }) {
     </Badge>
   )
 }
+
+export function LeadStatusBadge({ status }: { status: string }) {
+  const config: Record<string, { label: string; variant: 'default' | 'success' | 'warning' | 'danger' | 'info' }> = {
+    NEW: { label: 'Novo', variant: 'info' },
+    IN_PROGRESS: { label: 'Em atendimento', variant: 'warning' },
+    QUALIFIED: { label: 'Qualificado', variant: 'success' },
+    PROPOSAL_SENT: { label: 'Proposta enviada', variant: 'default' },
+    WON: { label: 'Ganho', variant: 'success' },
+    LOST: { label: 'Perdido', variant: 'danger' },
+  }
+
+  const c = config[status] || { label: status, variant: 'default' as const }
+
+  return (
+    <Badge variant={c.variant}>
+      {c.label}
+    </Badge>
+  )
+}

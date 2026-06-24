@@ -16,6 +16,8 @@ export const STEP_TYPE_CONFIG = {
   LOADING: { label: 'Tela de Loading', icon: 'Loader2', color: '#6366F1' },
   RESULT: { label: 'Resultado', icon: 'Trophy', color: '#EC4899' },
   REDIRECT: { label: 'Redirecionamento', icon: 'ExternalLink', color: '#14B8A6' },
+  IMAGE_CHOICE: { label: 'Escolha de Imagem', icon: 'Image', color: '#D946EF' },
+  BEFORE_AFTER: { label: 'Antes & Depois', icon: 'Split', color: '#06B6D4' },
 } as const
 
 export const FONT_OPTIONS = [

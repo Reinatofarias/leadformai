@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic'
 import { Card } from '@/components/ui/card'
 import { PhonePreview } from './phone-preview'
 import type { Funnel, FunnelStep } from '@prisma/client'
+import { Layers, GitBranch } from 'lucide-react'
+import { FlowCanvas } from './flow-canvas'
 
 // Dynamic Imports with elegant loading placeholders to make editing pages feel fast
 const FunnelStepsEditor = dynamic(() => import('./funnel-steps-editor').then(mod => mod.FunnelStepsEditor), {
@@ -30,6 +32,7 @@ interface EditorLayoutProps {
 
 export function EditorLayout({ funnel }: EditorLayoutProps) {
   const [activeStep, setActiveStep] = useState<FunnelStep | null>(null)
+  const [activeTab, setActiveTab] = useState<'steps' | 'flow'>('steps')
 
   const themeConfig = (funnel.theme as any) || {
     primaryColor: '#6366F1',
@@ -45,14 +48,47 @@ export function EditorLayout({ funnel }: EditorLayoutProps) {
       {/* Editor Panel (2/3 screen) */}
       <div className="lg:col-span-2 space-y-6">
         <Card className="border-slate-200/50 p-0 overflow-hidden shadow-sm">
-          <div className="border-b border-slate-100 px-6 py-5 bg-slate-50/50">
-            <h2 className="text-lg font-bold text-slate-800">Jornada do Funil</h2>
-            <p className="text-xs text-slate-400 font-medium mt-0.5">Adicione, ordene e edite cada etapa da experiência do lead.</p>
+          <div className="border-b border-slate-100 px-6 py-5 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-bold text-slate-800">Jornada do Funil</h2>
+              <p className="text-xs text-slate-400 font-medium mt-0.5">Adicione, ordene e edite cada etapa da experiência do lead.</p>
+            </div>
+            
+            {/* Tab Selector */}
+            <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200/40 self-start sm:self-auto shrink-0 shadow-inner">
+              <button
+                onClick={() => setActiveTab('steps')}
+                className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'steps'
+                    ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/10'
+                    : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <Layers className="h-3.5 w-3.5" />
+                Etapas
+              </button>
+              <button
+                onClick={() => setActiveTab('flow')}
+                className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                  activeTab === 'flow'
+                    ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/10'
+                    : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <GitBranch className="h-3.5 w-3.5 animate-pulse" />
+                Fluxo
+              </button>
+            </div>
           </div>
-          <FunnelStepsEditor 
-            funnel={funnel} 
-            onActiveStepChange={(step) => setActiveStep(step)} 
-          />
+
+          {activeTab === 'steps' ? (
+            <FunnelStepsEditor 
+              funnel={funnel} 
+              onActiveStepChange={(step) => setActiveStep(step)} 
+            />
+          ) : (
+            <FlowCanvas funnelId={funnel.id} steps={funnel.steps} />
+          )}
         </Card>
       </div>
 

@@ -20,6 +20,10 @@ export const updateFunnelSchema = z.object({
   whatsappNumber: z.string().optional(),
   whatsappMessage: z.string().optional(),
   theme: z.any().optional(),
+  webhookUrl: z.string().url('URL de Webhook inválida').optional().or(z.literal('')),
+  facebookPixelId: z.string().optional(),
+  googleTagManagerId: z.string().optional(),
+  customDomain: z.string().optional().or(z.literal('')),
 })
 
 export const funnelThemeSchema = z.object({

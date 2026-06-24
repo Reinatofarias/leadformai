@@ -7,6 +7,13 @@ const apiPublicPaths = ['/api/public']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const host = request.headers.get('host') || ''
+  const mainDomains = ['localhost:3000', 'localhost:3050', 'leadflow.com', 'leadflow.com.br', 'leadformai.vercel.app']
+  const isCustomDomain = !mainDomains.some(d => host.toLowerCase().includes(d))
+
+  if (isCustomDomain && (pathname === '/' || pathname === '')) {
+    return NextResponse.rewrite(new URL(`/f/domain-${host}`, request.url))
+  }
 
   // Allow public paths
   if (publicPaths.some((p) => pathname === p || pathname.startsWith('/f/'))) {

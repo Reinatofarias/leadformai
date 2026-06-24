@@ -14,10 +14,24 @@ export default async function GlobalLeadsPage({
   const search = typeof params.q === 'string' ? params.q : undefined
   const funnelId = typeof params.funnel === 'string' ? params.funnel : undefined
   const classification = typeof params.classification === 'string' ? params.classification : undefined
+  const status = typeof params.status === 'string' ? params.status : undefined
+  const utmSource = typeof params.utmSource === 'string' ? params.utmSource : undefined
+  const utmMedium = typeof params.utmMedium === 'string' ? params.utmMedium : undefined
+  const utmCampaign = typeof params.utmCampaign === 'string' ? params.utmCampaign : undefined
   const page = typeof params.page === 'string' ? parseInt(params.page) : 1
 
   const [leadsData, funnels] = await Promise.all([
-    getLeads({ search, funnelId, classification, page, limit: 20 }),
+    getLeads({ 
+      search, 
+      funnelId, 
+      classification, 
+      status, 
+      utmSource, 
+      utmMedium, 
+      utmCampaign, 
+      page, 
+      limit: 20 
+    }),
     getWorkspaceFunnels(),
   ])
 

@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/ui/spinner'
 import { formatDate } from '@/lib/utils'
 import { Zap, Users, Eye, TrendingUp, Plus, ArrowRight } from 'lucide-react'
 import { MetricsGridSkeleton } from '@/components/layout/dashboard-skeleton'
+import { PlanLimitsWidget } from '@/components/dashboard/plan-limits-widget'
 
 async function DashboardMetrics() {
   const stats = await getWorkspaceStats()
@@ -137,6 +138,11 @@ export default function DashboardPage() {
           </Link>
         }
       />
+
+      {/* Plan Limits Banner */}
+      <Suspense fallback={<div className="h-28 rounded-2xl border border-slate-200/60 bg-white p-6 shadow-sm shadow-slate-100/50 animate-pulse mb-8" />}>
+        <PlanLimitsWidget />
+      </Suspense>
 
       {/* Stats Cards */}
       <Suspense fallback={<MetricsGridSkeleton />}>

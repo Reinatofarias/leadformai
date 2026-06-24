@@ -9,32 +9,73 @@ datasource db {
 }
 
 // ============================================
-// AUTHENTICATION & MULTI-TENANCY
+// ENUMS FOR SAAS CORE
+// ============================================
+
+enum PlanType {
+  BASIC
+  PRO
+  ELITE
+  STARTER
+  AGENCY
+  ENTERPRISE
+}
+
+enum MemberRole {
+  OWNER
+  EDITOR
+  VIEWER
+  ADMIN
+  SALES
+  PLATFORM_ADMIN
+}
+
+// ============================================
+// AUTHENTICATION, MULTI-TENANCY & MEMBERSHIPS
 // ============================================
 
 model User {
-  id           String      @id @default(cuid())
+  id           String                @id @default(cuid())
   name         String
-  email        String      @unique
-  passwordHash String      @map("password_hash")
+  email        String                @unique
+  passwordHash String                @map("password_hash")
   workspaces   Workspace[]
-  createdAt    DateTime    @default(now()) @map("created_at")
-  updatedAt    DateTime    @updatedAt @map("updated_at")
+  memberships  WorkspaceMembership[]
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model Workspace {
-  id        String   @id @default(cuid())
-  name      String
-  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId   String   @map("owner_id")
-  funnels   Funnel[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id          String                @id @default(cuid())
+  name        String
+  owner       User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String                @map("owner_id")
+  plan        PlanType              @default(BASIC)
+  planStatus  String                @default("ACTIVE") @map("plan_status")
+  funnels     Funnel[]
+  memberships WorkspaceMembership[]
+  createdAt   DateTime              @default(now()) @map("created_at")
+  updatedAt   DateTime              @updatedAt @map("updated_at")
 
   @@index([ownerId])
   @@map("workspaces")
+}
+
+model WorkspaceMembership {
+  id          String     @id @default(cuid())
+  workspaceId String     @map("workspace_id")
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String     @map("user_id")
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        MemberRole @default(EDITOR)
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  @@unique([workspaceId, userId])
+  @@index([workspaceId])
+  @@index([userId])
+  @@map("workspace_memberships")
 }
 
 // ============================================
@@ -42,27 +83,32 @@ model Workspace {
 // ============================================
 
 model Funnel {
-  id                  String       @id @default(cuid())
-  workspace           Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  workspaceId         String       @map("workspace_id")
+  id                  String        @id @default(cuid())
+  workspace           Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId         String        @map("workspace_id")
   name                String
-  slug                String       @unique
-  status              FunnelStatus @default(DRAFT)
+  slug                String        @unique
+  status              FunnelStatus  @default(DRAFT)
   theme               Json?
-  whatsappNumber      String?      @map("whatsapp_number")
-  whatsappMessage     String?      @map("whatsapp_message")
-  isTemplate          Boolean      @default(false) @map("is_template")
-  templateCategory    String?      @map("template_category")
-  templateDescription String?      @map("template_description")
+  whatsappNumber      String?       @map("whatsapp_number")
+  whatsappMessage     String?       @map("whatsapp_message")
+  isTemplate          Boolean       @default(false) @map("is_template")
+  templateCategory    String?       @map("template_category")
+  templateDescription String?       @map("template_description")
+  webhookUrl          String?       @map("webhook_url")
+  facebookPixelId     String?       @map("facebook_pixel_id")
+  googleTagManagerId  String?       @map("google_tag_manager_id")
+  customDomain        String?       @unique @map("custom_domain")
   steps               FunnelStep[]
   leads               Lead[]
   events              FunnelEvent[]
-  createdAt           DateTime     @default(now()) @map("created_at")
-  updatedAt           DateTime     @updatedAt @map("updated_at")
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @updatedAt @map("updated_at")
 
   @@index([workspaceId])
   @@index([slug])
   @@index([isTemplate])
+  @@index([customDomain])
   @@map("funnels")
 }
 
@@ -100,6 +146,13 @@ enum StepType {
   LOADING
   RESULT
   REDIRECT
+  IMAGE_CHOICE
+  BEFORE_AFTER
+  OFFER
+  TESTIMONIALS
+  VIDEO
+  AUDIO
+  TIMER
 }
 
 // ============================================
@@ -118,6 +171,9 @@ model Lead {
   city           String?
   score          Int?
   classification Classification?
+  status         LeadStatus      @default(NEW)
+  lgpdConsent    Boolean         @default(false) @map("lgpd_consent")
+  lgpdConsentAt  DateTime?       @map("lgpd_consent_at")
   answers        Json?
   utmSource      String?         @map("utm_source")
   utmMedium      String?         @map("utm_medium")
@@ -142,6 +198,15 @@ enum Classification {
   WARM
   HOT
   VERY_HOT
+}
+
+enum LeadStatus {
+  NEW
+  IN_PROGRESS
+  QUALIFIED
+  PROPOSAL_SENT
+  WON
+  LOST
 }
 
 // ============================================

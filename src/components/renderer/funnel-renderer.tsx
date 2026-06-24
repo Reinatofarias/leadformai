@@ -17,6 +17,14 @@ import { CaptureFormRenderer } from './step-renderers/capture-form-renderer'
 import { LoadingRenderer } from './step-renderers/loading-renderer'
 import { ResultRenderer } from './step-renderers/result-renderer'
 import { RedirectRenderer } from './step-renderers/redirect-renderer'
+import { ImageChoiceRenderer } from './step-renderers/image-choice-renderer'
+import { BeforeAfterRenderer } from './step-renderers/before-after-renderer'
+import { OfferRenderer } from './step-renderers/offer-renderer'
+import { TimerRenderer } from './step-renderers/timer-renderer'
+import { VideoStepRenderer } from './step-renderers/video-step-renderer'
+import { TestimonialsRenderer } from './step-renderers/testimonials-renderer'
+import { AudioRenderer } from './step-renderers/audio-renderer'
+import { calculatePrice, formatCurrency } from '@/lib/price-calculator'
 
 type FunnelWithSteps = Funnel & { steps: FunnelStep[] }
 
@@ -40,7 +48,7 @@ export function FunnelRenderer({ funnel }: Props) {
   const currentStep = funnel.steps[currentStepIndex]
 
   // Event Tracking Helper
-  const trackEvent = (eventType: string, stepId?: string, metadata?: any) => {
+  const trackEvent = (eventType: string, stepId?: string, metadata?: Record<string, unknown>) => {
     if (!sessionId) return
     fetch('/api/public/events', {
       method: 'POST',
@@ -111,7 +119,7 @@ export function FunnelRenderer({ funnel }: Props) {
   }
 
   // Salvar Lead (Chamado pelo CaptureFormRenderer)
-  const submitLead = async (leadData: any) => {
+  const submitLead = async (leadData: Record<string, unknown>) => {
     // Calcula score final antes de salvar
     const result = scoreLead(answers, maxScore)
     setFinalScore(result)
@@ -130,6 +138,33 @@ export function FunnelRenderer({ funnel }: Props) {
         }),
       })
       trackEvent('LEAD_CAPTURED', currentStep.id)
+
+      // Rastreamento client-side se ativado
+      if (typeof window !== 'undefined') {
+        const w = window as unknown as { fbq?: (event: string, action: string, data?: Record<string, unknown>) => void; dataLayer?: Record<string, unknown>[] }
+        if (w.fbq) {
+          try {
+            w.fbq('track', 'Lead', {
+              value: result.normalizedScore,
+              currency: 'BRL'
+            })
+          } catch (e) {
+            console.error('Erro no rastreamento do FB Pixel:', e)
+          }
+        }
+        if (w.dataLayer) {
+          try {
+            w.dataLayer.push({
+              event: 'lead_captured',
+              leadScore: result.normalizedScore,
+              leadClassification: result.classification,
+              funnelName: funnel.name
+            })
+          } catch (e) {
+            console.error('Erro no GTM dataLayer push:', e)
+          }
+        }
+      }
     } catch (e) {
       console.error('Erro ao salvar lead', e)
     }
@@ -164,9 +199,18 @@ export function FunnelRenderer({ funnel }: Props) {
       case 'LOADING': return <LoadingRenderer {...props} />
       case 'RESULT': return <ResultRenderer {...props} finalScore={finalScore} />
       case 'REDIRECT': return <RedirectRenderer {...props} finalScore={finalScore} />
+      case 'IMAGE_CHOICE': return <ImageChoiceRenderer {...props} />
+      case 'BEFORE_AFTER': return <BeforeAfterRenderer {...props} />
+      case 'OFFER': return <OfferRenderer {...props} />
+      case 'TIMER': return <TimerRenderer {...props} />
+      case 'VIDEO': return <VideoStepRenderer {...props} />
+      case 'TESTIMONIALS': return <TestimonialsRenderer {...props} />
+      case 'AUDIO': return <AudioRenderer {...props} />
       default: return <div>Tipo de etapa desconhecido</div>
     }
   }
+
+  const currentPrice = calculatePrice(answers)
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-background)] overflow-hidden">
@@ -177,6 +221,16 @@ export function FunnelRenderer({ funnel }: Props) {
             currentStep={currentStepIndex} 
             totalSteps={funnel.steps.length} 
           />
+        </div>
+      )}
+
+      {/* active price bar (floating estimate) */}
+      {currentPrice > 0 && currentStep.type !== 'RESULT' && currentStep.type !== 'REDIRECT' && (
+        <div className="fixed top-4 right-4 z-40 animate-slide-in">
+          <div className="bg-slate-900/90 backdrop-blur-md border border-slate-800 text-white rounded-full px-4 py-1.5 shadow-lg flex items-center gap-2">
+            <span className="text-3xs font-semibold uppercase tracking-wider text-indigo-400">Orçamento Estimado:</span>
+            <span className="text-xs font-extrabold text-white">{formatCurrency(currentPrice)}</span>
+          </div>
         </div>
       )}
 

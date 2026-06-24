@@ -80,7 +80,22 @@ export const redirectConfigSchema = z.object({
 })
 
 export const createStepSchema = z.object({
-  type: z.enum(['WELCOME', 'MULTIPLE_CHOICE', 'OPEN_QUESTION', 'CAPTURE_FORM', 'LOADING', 'RESULT', 'REDIRECT']),
+  type: z.enum([
+    'WELCOME',
+    'MULTIPLE_CHOICE',
+    'OPEN_QUESTION',
+    'CAPTURE_FORM',
+    'LOADING',
+    'RESULT',
+    'REDIRECT',
+    'IMAGE_CHOICE',
+    'BEFORE_AFTER',
+    'OFFER',
+    'TESTIMONIALS',
+    'VIDEO',
+    'AUDIO',
+    'TIMER'
+  ]),
   title: z.string().optional().default(''),
   description: z.string().optional().default(''),
   config: z.any(),

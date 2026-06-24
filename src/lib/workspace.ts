@@ -5,6 +5,43 @@ import { redirect } from 'next/navigation'
 export async function getWorkspaceId(): Promise<string> {
   const session = await getSession()
   if (!session) redirect('/login')
+
+  // Platform admin email gets general access to everything, bypass validation
+  if (session.email === 'admin@leadflow.com') {
+    return session.workspaceId
+  }
+
+  // Verify access: user must be the owner OR have a membership
+  const access = await prisma.workspace.findFirst({
+    where: {
+      id: session.workspaceId,
+      OR: [
+        { ownerId: session.userId },
+        { memberships: { some: { userId: session.userId } } }
+      ]
+    },
+    select: { id: true }
+  })
+
+  if (!access) {
+    // Look for an alternative workspace the user has access to
+    const altWorkspace = await prisma.workspace.findFirst({
+      where: {
+        OR: [
+          { ownerId: session.userId },
+          { memberships: { some: { userId: session.userId } } }
+        ]
+      },
+      select: { id: true }
+    })
+
+    if (altWorkspace) {
+      return altWorkspace.id
+    }
+
+    redirect('/login')
+  }
+
   return session.workspaceId
 }
 

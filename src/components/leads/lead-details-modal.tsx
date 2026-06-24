@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ClassificationBadge } from '@/components/ui/badge'
 import { buildWhatsAppUrlWithData, classificationToPtBr } from '@/lib/whatsapp'
 import { formatDateTime } from '@/lib/utils'
-import { MessageCircle, Mail, Phone, MapPin, Building2, User, Globe2 } from 'lucide-react'
+import { MessageCircle, Mail, Phone, MapPin, Building2, User, Globe2, Check } from 'lucide-react'
 
 interface LeadDetailsModalProps {
   lead: any
@@ -69,8 +69,23 @@ export function LeadDetailsModal({ lead, onClose }: LeadDetailsModalProps) {
           <div className="flex flex-col items-end gap-2">
             <ClassificationBadge classification={lead.classification} />
             {lead.score !== null && (
-              <span className="text-sm font-semibold text-gray-700">Score: {lead.score}/100</span>
+              <span className="text-sm font-semibold text-gray-750">Score: {lead.score}/100</span>
             )}
+            <div>
+              <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide border ${
+                lead.status === 'WON' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' :
+                lead.status === 'LOST' ? 'border-red-200 bg-red-50 text-red-600' :
+                lead.status === 'QUALIFIED' ? 'border-indigo-200 bg-indigo-50 text-indigo-700' :
+                lead.status === 'IN_PROGRESS' ? 'border-amber-200 bg-amber-50 text-amber-700' :
+                'border-slate-200 bg-slate-50 text-slate-655'
+              }`}>
+                {lead.status === 'NEW' || !lead.status ? '🆕 Novo' :
+                 lead.status === 'IN_PROGRESS' ? '⏳ Em atendimento' :
+                 lead.status === 'QUALIFIED' ? '✅ Qualificado' :
+                 lead.status === 'PROPOSAL_SENT' ? '📄 Proposta enviada' :
+                 lead.status === 'WON' ? '🎉 Ganho' : '❌ Perdido'}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -111,12 +126,47 @@ export function LeadDetailsModal({ lead, onClose }: LeadDetailsModalProps) {
           )}
           {lead.utmSource && (
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded bg-gray-50">
-                <Globe2 className="h-4 w-4 text-gray-500" />
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-indigo-50/50">
+                <Globe2 className="h-4 w-4 text-indigo-500" />
               </div>
               <div className="min-w-0">
-                <p className="text-xs text-gray-500">Origem (UTM)</p>
-                <p className="text-sm font-medium text-gray-900">{lead.utmSource} / {lead.utmCampaign || 'Orgânico'}</p>
+                <p className="text-xs text-gray-500">UTM Source (Origem)</p>
+                <p className="text-sm font-semibold text-gray-900 truncate">{lead.utmSource}</p>
+              </div>
+            </div>
+          )}
+          {lead.utmMedium && (
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-indigo-50/50">
+                <Globe2 className="h-4 w-4 text-indigo-500" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-gray-500">UTM Medium (Mídia)</p>
+                <p className="text-sm font-semibold text-gray-900 truncate">{lead.utmMedium}</p>
+              </div>
+            </div>
+          )}
+          {lead.utmCampaign && (
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-indigo-50/50">
+                <Globe2 className="h-4 w-4 text-indigo-500" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-gray-500">UTM Campaign (Campanha)</p>
+                <p className="text-sm font-semibold text-gray-900 truncate">{lead.utmCampaign}</p>
+              </div>
+            </div>
+          )}
+          {lead.lgpdConsent && (
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded bg-emerald-50/60">
+                <Check className="h-4 w-4 text-emerald-600" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-gray-500">LGPD (Consentimento)</p>
+                <p className="text-sm font-semibold text-emerald-700 truncate" title={lead.lgpdConsentAt ? formatDateTime(lead.lgpdConsentAt) : ''}>
+                  Aceito em {lead.lgpdConsentAt ? new Date(lead.lgpdConsentAt).toLocaleDateString('pt-BR') : ''}
+                </p>
               </div>
             </div>
           )}

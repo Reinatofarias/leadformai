@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import { getWorkspaceId } from '@/lib/workspace'
 import { revalidatePath } from 'next/cache'
+import { StepType } from '@prisma/client'
 
 export async function createStep(funnelId: string, data: {
   type: string
@@ -23,7 +24,7 @@ export async function createStep(funnelId: string, data: {
     data: {
       funnelId,
       order: funnel._count.steps,
-      type: data.type as 'WELCOME' | 'MULTIPLE_CHOICE' | 'OPEN_QUESTION' | 'CAPTURE_FORM' | 'LOADING' | 'RESULT' | 'REDIRECT',
+      type: data.type as StepType,
       title: data.title || '',
       description: data.description || '',
       config: (data.config as object) || {},

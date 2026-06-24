@@ -15,6 +15,13 @@ import { CaptureFormForm } from './step-types/capture-form-form'
 import { LoadingForm } from './step-types/loading-form'
 import { ResultForm } from './step-types/result-form'
 import { RedirectForm } from './step-types/redirect-form'
+import { ImageChoiceForm } from './step-types/image-choice-form'
+import { BeforeAfterForm } from './step-types/before-after-form'
+import { OfferForm } from './step-types/offer-form'
+import { TimerForm } from './step-types/timer-form'
+import { VideoForm } from './step-types/video-form'
+import { TestimonialsForm } from './step-types/testimonials-form'
+import { AudioForm } from './step-types/audio-form'
 
 interface StepConfigFormProps {
   step: FunnelStep
@@ -49,6 +56,13 @@ export function StepConfigForm({ step, funnelId }: StepConfigFormProps) {
       case 'LOADING': return <LoadingForm {...props} />
       case 'RESULT': return <ResultForm {...props} />
       case 'REDIRECT': return <RedirectForm {...props} />
+      case 'IMAGE_CHOICE': return <ImageChoiceForm {...props} />
+      case 'BEFORE_AFTER': return <BeforeAfterForm {...props} />
+      case 'OFFER': return <OfferForm {...props} />
+      case 'TIMER': return <TimerForm {...props} />
+      case 'VIDEO': return <VideoForm {...props} />
+      case 'TESTIMONIALS': return <TestimonialsForm {...props} />
+      case 'AUDIO': return <AudioForm {...props} />
       default: return <div>Tipo de etapa desconhecido</div>
     }
   }

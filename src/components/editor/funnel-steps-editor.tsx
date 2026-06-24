@@ -21,7 +21,9 @@ import {
   ClipboardList,
   Loader2,
   Trophy,
-  ExternalLink
+  ExternalLink,
+  Image,
+  Split,
 } from 'lucide-react'
 import { StepConfigForm } from './step-config-form'
 import type { Funnel, FunnelStep } from '@prisma/client'
@@ -36,6 +38,8 @@ const STEP_ICONS = {
   LOADING: Loader2,
   RESULT: Trophy,
   REDIRECT: ExternalLink,
+  IMAGE_CHOICE: Image,
+  BEFORE_AFTER: Split,
 } as const
 
 interface FunnelStepsEditorProps {

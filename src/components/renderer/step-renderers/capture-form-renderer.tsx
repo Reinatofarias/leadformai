@@ -20,6 +20,7 @@ export function CaptureFormRenderer({ step, submitLead }: Props) {
   const fields: Field[] = config.fields || []
   
   const [formData, setFormData] = useState<Record<string, string>>({})
+  const [lgpdConsent, setLgpdConsent] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -52,6 +53,10 @@ export function CaptureFormRenderer({ step, submitLead }: Props) {
         }
       }
     })
+
+    if (!lgpdConsent) {
+      newErrors.lgpdConsent = 'Você precisa aceitar os termos de privacidade para continuar'
+    }
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -64,7 +69,10 @@ export function CaptureFormRenderer({ step, submitLead }: Props) {
     setIsSubmitting(true)
     // Delay simulado para UX antes de passar para o submit real
     await new Promise(r => setTimeout(r, 400))
-    submitLead(formData)
+    submitLead({
+      ...formData,
+      lgpdConsent: true
+    })
   }
 
   return (
@@ -103,10 +111,36 @@ export function CaptureFormRenderer({ step, submitLead }: Props) {
           </div>
         ))}
 
+        <div className="mt-2 flex flex-col gap-1">
+          <label className="flex items-start gap-2.5 cursor-pointer select-none text-left">
+            <input
+              type="checkbox"
+              checked={lgpdConsent}
+              onChange={(e) => {
+                setLgpdConsent(e.target.checked)
+                if (errors.lgpdConsent) {
+                  setErrors(prev => {
+                    const newErrors = { ...prev }
+                    delete newErrors.lgpdConsent
+                    return newErrors
+                  })
+                }
+              }}
+              className="mt-1 h-4 w-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-0 focus:ring-offset-0 cursor-pointer"
+            />
+            <span className="text-[11px] text-gray-450 leading-relaxed font-semibold">
+              Aceito os Termos de Uso e a Política de Privacidade e autorizo o processamento dos meus dados pessoais em conformidade com a LGPD.
+            </span>
+          </label>
+          {errors.lgpdConsent && (
+            <p className="text-red-500 text-xs mt-1 ml-1">{errors.lgpdConsent}</p>
+          )}
+        </div>
+
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full flex items-center justify-center gap-2 bg-[var(--color-primary,#6366F1)] text-white hover:opacity-90 active:scale-95 px-6 py-4 rounded-xl font-bold text-lg transition-all shadow-md cursor-pointer mt-4 disabled:opacity-70"
+          className="w-full flex items-center justify-center gap-2 bg-[var(--color-primary,#6366F1)] text-white hover:opacity-90 active:scale-95 px-6 py-4 rounded-xl font-bold text-lg transition-all shadow-md cursor-pointer mt-2 disabled:opacity-70"
         >
           {isSubmitting ? 'Processando...' : (config.buttonText || 'Ver Resultado')}
           {!isSubmitting && <ArrowRight className="h-5 w-5" />}
