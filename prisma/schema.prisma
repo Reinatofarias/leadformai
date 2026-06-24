@@ -53,9 +53,11 @@ model Workspace {
   owner       User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     String                @map("owner_id")
   plan        PlanType              @default(BASIC)
-  planStatus  String                @default("ACTIVE") @map("plan_status")
-  funnels     Funnel[]
-  memberships WorkspaceMembership[]
+  planStatus             String                @default("ACTIVE") @map("plan_status")
+  stripeCustomerId       String?               @map("stripe_customer_id")
+  stripeSubscriptionId   String?               @map("stripe_subscription_id")
+  funnels                Funnel[]
+  memberships            WorkspaceMembership[]
   createdAt   DateTime              @default(now()) @map("created_at")
   updatedAt   DateTime              @updatedAt @map("updated_at")
 
