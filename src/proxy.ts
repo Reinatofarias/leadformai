@@ -5,7 +5,7 @@ import { verifyToken } from '@/lib/auth'
 const publicPaths = ['/', '/login', '/register', '/f']
 const apiPublicPaths = ['/api/public']
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const host = request.headers.get('host') || ''
   const mainDomains = ['localhost:3000', 'localhost:3050', 'leadflow.com', 'leadflow.com.br', 'leadformai.vercel.app']
