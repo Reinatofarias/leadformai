@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================
+// AUTHENTICATION & MULTI-TENANCY
+// ============================================
+
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String      @unique
+  passwordHash String      @map("password_hash")
+  workspaces   Workspace[]
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String   @map("owner_id")
+  funnels   Funnel[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([ownerId])
+  @@map("workspaces")
+}
+
+// ============================================
+// FUNNELS
+// ============================================
+
+model Funnel {
+  id                  String       @id @default(cuid())
+  workspace           Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId         String       @map("workspace_id")
+  name                String
+  slug                String       @unique
+  status              FunnelStatus @default(DRAFT)
+  theme               Json?
+  whatsappNumber      String?      @map("whatsapp_number")
+  whatsappMessage     String?      @map("whatsapp_message")
+  isTemplate          Boolean      @default(false) @map("is_template")
+  templateCategory    String?      @map("template_category")
+  templateDescription String?      @map("template_description")
+  steps               FunnelStep[]
+  leads               Lead[]
+  events              FunnelEvent[]
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+
+  @@index([workspaceId])
+  @@index([slug])
+  @@index([isTemplate])
+  @@map("funnels")
+}
+
+enum FunnelStatus {
+  DRAFT
+  PUBLISHED
+}
+
+// ============================================
+// FUNNEL STEPS
+// ============================================
+
+model FunnelStep {
+  id          String   @id @default(cuid())
+  funnel      Funnel   @relation(fields: [funnelId], references: [id], onDelete: Cascade)
+  funnelId    String   @map("funnel_id")
+  order       Int
+  type        StepType
+  title       String?
+  description String?
+  config      Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([funnelId])
+  @@index([funnelId, order])
+  @@map("funnel_steps")
+}
+
+enum StepType {
+  WELCOME
+  MULTIPLE_CHOICE
+  OPEN_QUESTION
+  CAPTURE_FORM
+  LOADING
+  RESULT
+  REDIRECT
+}
+
+// ============================================
+// LEADS
+// ============================================
+
+model Lead {
+  id             String          @id @default(cuid())
+  funnel         Funnel          @relation(fields: [funnelId], references: [id], onDelete: Cascade)
+  funnelId       String          @map("funnel_id")
+  sessionId      String?         @map("session_id")
+  name           String?
+  email          String?
+  phone          String?
+  company        String?
+  city           String?
+  score          Int?
+  classification Classification?
+  answers        Json?
+  utmSource      String?         @map("utm_source")
+  utmMedium      String?         @map("utm_medium")
+  utmCampaign    String?         @map("utm_campaign")
+  utmContent     String?         @map("utm_content")
+  utmTerm        String?         @map("utm_term")
+  ip             String?
+  userAgent      String?         @map("user_agent")
+  events         FunnelEvent[]
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  @@index([funnelId])
+  @@index([funnelId, classification])
+  @@index([email])
+  @@index([sessionId])
+  @@map("leads")
+}
+
+enum Classification {
+  COLD
+  WARM
+  HOT
+  VERY_HOT
+}
+
+// ============================================
+// EVENTS (Tracking)
+// ============================================
+
+model FunnelEvent {
+  id        String    @id @default(cuid())
+  funnel    Funnel    @relation(fields: [funnelId], references: [id], onDelete: Cascade)
+  funnelId  String    @map("funnel_id")
+  lead      Lead?     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  leadId    String?   @map("lead_id")
+  sessionId String    @map("session_id")
+  eventType EventType @map("event_type")
+  stepId    String?   @map("step_id")
+  metadata  Json?
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([funnelId])
+  @@index([sessionId])
+  @@index([funnelId, eventType])
+  @@index([createdAt])
+  @@map("funnel_events")
+}
+
+enum EventType {
+  FUNNEL_STARTED
+  STEP_VIEWED
+  STEP_COMPLETED
+  LEAD_CAPTURED
+  FUNNEL_COMPLETED
+  REDIRECT_CLICKED
+}
