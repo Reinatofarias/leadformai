@@ -1,7 +1,8 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { hashPassword, verifyPassword, signToken, setSessionCookie, clearSessionCookie } from '@/lib/auth'
+import { signToken, setSessionCookie, clearSessionCookie } from '@/lib/auth'
+import { hashPassword, verifyPassword } from '@/lib/password'
 import { loginSchema, registerSchema } from '@/schemas/auth'
 import { redirect } from 'next/navigation'
 
