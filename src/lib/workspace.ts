@@ -98,6 +98,9 @@ export async function getWorkspaceStats() {
         funnel: { workspaceId },
         eventType: 'FUNNEL_STARTED',
       },
+      _count: {
+        sessionId: true,
+      },
     }),
   ])
 

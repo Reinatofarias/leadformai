@@ -15,6 +15,9 @@ export async function getFunnelAnalytics(funnelId: string, workspaceId: string) 
     prisma.funnelEvent.groupBy({
       by: ['sessionId'],
       where: { funnelId, eventType: 'FUNNEL_STARTED' },
+      _count: {
+        sessionId: true,
+      },
     }),
   ])
 
