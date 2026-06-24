@@ -21,13 +21,8 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-3">
-            <Zap className="h-6 w-6 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            LeadFlow AI
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">Crie sua conta gratuitamente</p>
+          <img src="/logo-vertical.png" alt="VoxFunnels Logo" className="h-24 w-auto object-contain" />
+          <p className="text-gray-500 text-sm mt-2">Crie sua conta gratuitamente</p>
         </div>
 
         <Card className="p-8">

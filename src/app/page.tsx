@@ -53,14 +53,7 @@ export default function HomePage() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8.5 w-8.5 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md shadow-indigo-500/10">
-              <Zap className="h-4.5 w-4.5 text-white" />
-            </div>
-            <span className="text-lg font-extrabold bg-gradient-to-r from-slate-900 to-indigo-950 bg-clip-text text-transparent tracking-tight">
-              LeadFlow AI
-            </span>
-          </div>
+            <img src="/logo-light.png" alt="VoxFunnels Logo" className="h-8 w-auto object-contain" />
           <div className="flex items-center gap-3">
             <Link href="/login">
               <Button variant="ghost" className="font-semibold text-slate-600">Entrar</Button>
@@ -140,7 +133,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight font-heading">
-              Por que escolher o LeadFlow AI?
+              Por que escolher o VoxFunnels?
             </h2>
             <p className="text-slate-500 mt-2.5 text-sm">A união perfeita entre rapidez de criação e resultados reais.</p>
           </div>
@@ -171,13 +164,10 @@ export default function HomePage() {
       <footer className="border-t border-slate-100 bg-white py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-              <Zap className="h-3.5 w-3.5 text-white" />
-            </div>
-            <span className="text-sm font-extrabold text-slate-800">LeadFlow AI</span>
+            <img src="/logo-light.png" alt="VoxFunnels Logo" className="h-6 w-auto object-contain" />
           </div>
           <p className="text-xs font-semibold text-slate-400">
-            © {new Date().getFullYear()} LeadFlow AI. Todos os direitos reservados.
+            © {new Date().getFullYear()} VoxFunnels. Todos os direitos reservados.
           </p>
         </div>
       </footer>

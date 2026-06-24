@@ -13,11 +13,11 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "LeadFlow AI — Funis Interativos para Qualificação de Leads",
+  title: "VoxFunnels — Funis Interativos para Qualificação de Leads",
   description: "Crie funis interativos que qualificam leads automaticamente e enviam os contatos certos para o WhatsApp, CRM ou automação.",
   keywords: ["funis interativos", "qualificação de leads", "quiz", "landing page", "WhatsApp", "captura de leads"],
   openGraph: {
-    title: "LeadFlow AI",
+    title: "VoxFunnels",
     description: "Crie funis interativos que qualificam leads automaticamente.",
     type: "website",
   },

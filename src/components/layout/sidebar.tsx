@@ -58,13 +58,8 @@ export function Sidebar({ userName }: SidebarProps) {
         )}
       >
         {/* Logo */}
-        <div className="flex h-16 items-center gap-3.5 px-6 border-b border-slate-900">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 shadow-lg shadow-indigo-500/20">
-            <Zap className="h-4.5 w-4.5 text-white" />
-          </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent tracking-tight">
-            LeadFlow AI
-          </span>
+        <div className="flex h-16 items-center px-6 border-b border-slate-900">
+          <img src="/logo-dark.png" alt="VoxFunnels Logo" className="h-8 w-auto object-contain" />
         </div>
 
         {/* Navigation */}

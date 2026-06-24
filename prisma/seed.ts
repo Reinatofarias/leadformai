@@ -4,7 +4,7 @@ import { hash } from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('Iniciando o seed do LeadFlow AI...')
+  console.log('Iniciando o seed do VoxFunnels...')
 
   // 1. Criar um Workspace e Usuário padrão para testes locais
   const passwordHash = await hash('senha123', 10)
@@ -18,7 +18,7 @@ async function main() {
       owner: {
         create: {
           email: 'admin@leadflow.com',
-          name: 'Admin LeadFlow',
+          name: 'Admin VoxFunnels',
           passwordHash,
         }
       }

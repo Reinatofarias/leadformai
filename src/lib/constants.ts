@@ -1,5 +1,6 @@
-export const APP_NAME = 'LeadFlow AI'
+export const APP_NAME = 'VoxFunnels'
 export const APP_DESCRIPTION = 'Crie funis interativos que qualificam leads automaticamente e enviam os contatos certos para o WhatsApp, CRM ou automação.'
+
 
 export const CLASSIFICATION_CONFIG = {
   COLD: { label: 'Frio', color: '#93C5FD', bgColor: '#DBEAFE', emoji: '🧊', min: 0, max: 30 },

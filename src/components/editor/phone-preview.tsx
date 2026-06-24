@@ -35,7 +35,7 @@ export function PhonePreview({ step, theme, funnelName }: PhonePreviewProps) {
             <Smartphone className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-sm font-bold text-slate-800">Simulador LeadFlow</p>
+            <p className="text-sm font-bold text-slate-800">Simulador VoxFunnels</p>
             <p className="text-xs text-slate-400 mt-1 max-w-[200px]">
               Expanda ou edite uma etapa à esquerda para ver a simulação em tempo real.
             </p>

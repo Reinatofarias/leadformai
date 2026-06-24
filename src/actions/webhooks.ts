@@ -26,7 +26,7 @@ export async function testWebhookUrl(url: string): Promise<TestWebhookResult> {
       data: {
         id: 'mock_lead_test_123',
         name: 'Lead de Teste',
-        email: 'teste@leadflow.com',
+        email: 'teste@voxfunnels.com',
         phone: '+5511999999999',
         score: 85,
         classification: 'HOT',
@@ -45,8 +45,8 @@ export async function testWebhookUrl(url: string): Promise<TestWebhookResult> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': 'LeadFlow-AI-Webhook-Tester/1.0',
-        'X-LeadFlow-Event': 'lead.test'
+        'User-Agent': 'VoxFunnels-Webhook-Tester/1.0',
+        'X-VoxFunnels-Event': 'lead.test'
       },
       body: JSON.stringify(payload),
       signal: controller.signal

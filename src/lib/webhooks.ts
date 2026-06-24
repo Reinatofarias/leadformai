@@ -20,9 +20,9 @@ export async function dispatchWebhookEvent(url: string, payload: Record<string, 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'User-Agent': 'LeadFlow-AI-Webhook-Dispatcher/1.0',
-            'X-LeadFlow-Event': 'lead.captured',
-            'X-LeadFlow-Attempt': String(attempt)
+            'User-Agent': 'VoxFunnels-Webhook-Dispatcher/1.0',
+            'X-VoxFunnels-Event': 'lead.captured',
+            'X-VoxFunnels-Attempt': String(attempt)
           },
           body: JSON.stringify({
             event: 'lead.captured',

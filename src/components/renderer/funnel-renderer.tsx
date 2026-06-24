@@ -264,7 +264,7 @@ export function FunnelRenderer({ funnel }: Props) {
           rel="noopener noreferrer"
           className="text-[10px] text-gray-400 font-medium hover:text-gray-600 transition-colors"
         >
-          ⚡ Desenvolvido com LeadFlow AI
+          ⚡ Desenvolvido com VoxFunnels
         </a>
       </div>
     </div>
